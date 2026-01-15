@@ -1,1 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NextGen 3D Printer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #0f0f0f;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+    header {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: linear-gradient(135deg, #111, #1f1f1f);
+    }
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    header p {
+      font-size: 1.25rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    section {
+      min-height: 100vh;
+      padding: 4rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    .content {
+      max-width: 500px;
+    }
+    .content h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .content p {
+      line-height: 1.6;
+      color: #cccccc;
+    }
+    #three-container {
+      width: 500px;
+      height: 500px;
+    }
+    footer {
+      padding: 2rem;
+      text-align: center;
+      background: #111;
+      color: #777;
+    }
+    @media (max-width: 900px) {
+      section {
+        flex-direction: column;
+      }
+      #three-container {
+        width: 100%;
+        height: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>NextGen 3D Printer</h1>
+      <p>Precision. Speed. Reliability. Experience the future of additive manufacturing.</p>
+    </div>
+  </header>
 
+  <section>
+    <div class="content">
+      <h2>Designed for Professionals</h2>
+      <p>
+        Our 3D printer delivers ultra-fine detail, consistent performance, and
+        industrial-grade reliability. Perfect for prototyping, engineering, and
+        creative projects.
+      </p>
+    </div>
+    <div id="three-container"></div>
+  </section>
+
+  <section>
+    <div class="content">
+      <h2>Power Meets Simplicity</h2>
+      <p>
+        Easy setup, intuitive controls, and powerful hardware let you focus on
+        creating instead of troubleshooting.
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 NextGen 3D Printing
+  </footer>
+
+  <!-- Three.js -->
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script>
+    const container = document.getElementById('three-container');
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      45,
+      container.clientWidth / container.clientHeight,
+      0.1,
+      1000
+    );
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    // Box geometry (placeholder for 3D printer)
+    const geometry = new THREE.BoxGeometry(1, 1.5, 1);
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x00bcd4,
+      metalness: 0.6,
+      roughness: 0.3,
+    });
+    const box = new THREE.Mesh(geometry, material);
+    scene.add(box);
+
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(5, 5, 5);
+    scene.add(directionalLight);
+
+    camera.position.z = 4;
+
+    // Scroll-based rotation
+    let scrollProgress = 0;
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.body.scrollHeight - window.innerHeight;
+      scrollProgress = scrollTop / docHeight;
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Slowly rotate based on scroll
+      box.rotation.y = scrollProgress * Math.PI * 2;
+      box.rotation.x = scrollProgress * Math.PI * 0.5;
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Handle resize
+    window.addEventListener('resize', () => {
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+  </script>
+</body>
+</html>
